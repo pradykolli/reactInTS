@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
-
+import ChekList from './ChekList';
+import AddCheckListItem from './AddCheckListItem'
+const initialCheckList:Array<Item> = [
+  {text:'Learn Typescript', completed:false},
+  {text:'Learn Django', completed:false},
+  {text:'Learn React', completed:true}
+]
 const App = () => {
+const [checkList, setCheckList] = useState<State>(initialCheckList)
+const toggleChecked:ToggleChecked = clickedItem => {
+  const newItem = checkList.map(item => {
+    if(item === clickedItem){
+      return {
+        ...item,
+        completed: !item.completed
+      }
+    }
+    return item
+  });
+  setCheckList(newItem)
+}
+
+const addItem:AddItem = newitem => {
+  newitem.trim() !== "" && setCheckList([...checkList , {text:newitem, completed:false}]);
+}
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <AddCheckListItem addItem={addItem}/>
+      <ChekList items={checkList} toggler={toggleChecked}/>
     </div>
   );
 }
